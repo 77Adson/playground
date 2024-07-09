@@ -1,26 +1,18 @@
-#Work_in_progres
-
 def maxProfitWithKTransactions(prices, k):
-    prices.append(0)
-    if prices[0] == max(prices):
+    if not prices:
         return 0
-    profit = [-prices[0]]
-    i = 0
-    n = 0
-    while i < len(prices) - 1:
-        if prices[i] > prices[i + 1]:
-            profit[n] += prices[i]
-            profit[n] -= prices[i + 1]
-            i += 1
-            profit.append(0)
-            n += 1
-        i += 1
-    print(profit)
-    return bestK(profit, k)
 
+    # Jeśli k >= n/2, można przeprowadzić dowolną liczbę transakcji
+    n = len(prices)
+    if k >= n // 2:
+        return sum(max(prices[i] - prices[i - 1], 0) for i in range(1, n))
 
-def bestK(profit, k):
-    profit.sort(reverse=True)
-    profit = profit[:k]
-    suma = sum(profit)
-    return suma
+    # Inicjalizacja tabeli DP(dynamiczne programowanie)
+    dp = [[0] * n for _ in range(k + 1)]
+
+    for t in range(1, k + 1):
+        max_profit_before = -prices[0]
+        for d in range(1, n):
+            dp[t][d] = max(dp[t][d - 1], prices[d] + max_profit_before)
+            max_profit_before = max(max_profit_before, dp[t - 1][d] - prices[d])
+    return dp[k][n - 1]
