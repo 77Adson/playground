@@ -1,18 +1,20 @@
-#Znalezdz local minima i maxima
-
 def maxProfitWithKTransactions(prices, k):
-    prices.append(0)
-    profit = -prices[0]
-    i = 0
-    while i < len(prices)-1:
-        if prices[i] > prices[i+1]:
-            profit += prices[i]
-            profit -= prices[i+1]
-            i += 1
-        i += 1
-    return profit
+    if not prices:
+        return 0
 
+    # Jeśli k >= n/2, można przeprowadzić dowolną liczbę transakcji
+    n = len(prices)
+    if k >= n // 2:
+        return sum(max(prices[i] - prices[i - 1], 0) for i in range(1, n))
 
-prices = [5, 11, 3, 50, 60, 90]
-k = 2
-print(maxProfitWithKTransactions(prices, k))
+    # Inicjalizacja tabeli DP(dynamiczne programowanie)
+    dp = [[0] * n for _ in range(k + 1)]
+
+    for t in range(1, k + 1):
+        max_profit_before = -prices[0]
+        for d in range(1, n):
+            dp[t][d] = max(dp[t][d - 1], prices[d] + max_profit_before)
+            max_profit_before = max(max_profit_before, dp[t - 1][d] - prices[d])
+
+    return dp[k][n - 1]
+
