@@ -15,6 +15,4 @@ def maxProfitWithKTransactions(prices, k):
         for d in range(1, n):
             dp[t][d] = max(dp[t][d - 1], prices[d] + max_profit_before)
             max_profit_before = max(max_profit_before, dp[t - 1][d] - prices[d])
-
     return dp[k][n - 1]
-
