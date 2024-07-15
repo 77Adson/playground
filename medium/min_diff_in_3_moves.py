@@ -5,7 +5,7 @@ class Solution(object):
         for i in list:
             assert -10**9 <= i <= 10**9
     @staticmethod
-    def max_minus_min(list):
+    def diff(list):
         return max(list) - min(list)
 
     def minDifference(self, nums):
@@ -16,15 +16,11 @@ class Solution(object):
         self.asserts(nums)
         if len(nums) <= 4:
             return 0
+        nums.sort()
+        scenario1 = nums[3::]
+        scenario2 = nums[:-3:]
+        scenario3 = nums[2:-1:]
+        scenario4 = nums[1:-2:]
 
-        steps = 3
-        nums = sorted(nums)
-        while steps != 0:
-            nums_min = nums[1::]
-            nums_max = nums[:-1:]
-            if self.max_minus_min(nums_max) > self.max_minus_min(nums_min):
-                nums = nums_min
-            else:
-                nums = nums_max
-            steps -= 1
-        return self.max_minus_min(nums)
+        return min(self.diff(scenario1), self.diff(scenario2),
+                   self.diff(scenario3), self.diff(scenario4))
