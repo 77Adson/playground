@@ -12,9 +12,8 @@ class Solution(object):
         p_sorted = sorted(positions)
         for el in p_sorted:
             idx.append(positions.index(el))
-        print('indexes:',idx)
+        print('indexes:', idx)
         return idx
-
 
     def survivedRobotsHealths(self, positions, healths, directions):
         if self.direction_check(directions):
@@ -22,7 +21,6 @@ class Solution(object):
 
         stack = []
         for i in self.sort(positions):
-            print(i, directions[i])
             if directions[i] == 'R':
                 stack.append(i)
             else:
@@ -39,13 +37,6 @@ class Solution(object):
                         healths[i] = 0
                         healths[stack[-1]] = 0
                         stack.pop()
-            print('s', stack)
-            print('h', healths)
+            print(stack)
         healths = [el for el in healths if el != 0]
         return healths
-
-p = [3,5,2,6]
-h = [10,10,15,12]
-d = "RLRL"
-s = Solution()
-print('return:', s.survivedRobotsHealths(p,h,d))
