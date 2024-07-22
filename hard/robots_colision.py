@@ -6,64 +6,46 @@ class Solution(object):
                 return False
         return True
 
+    @staticmethod
+    def sort(positions):
+        idx = []
+        p_sorted = sorted(positions)
+        for el in p_sorted:
+            idx.append(positions.index(el))
+        print('indexes:',idx)
+        return idx
+
+
     def survivedRobotsHealths(self, positions, healths, directions):
-
-        """
-        :type positions: List[int]
-        :type healths: List[int]
-        :type directions: str
-        :rtype: List[int]
-        """
-
         if self.direction_check(directions):
             return healths
 
-        directions = list(directions)
-        position_lim = max(positions)
-        while not self.direction_check(directions):
-            for i in range(len(positions)):
-                if directions[i] == 'R':
-                    positions[i] += 1
-                    if positions[i] > position_lim:
-                        positions[i] = 1
-                else:
-                    positions[i] -= 1
-                    if positions[i] < 1:
-                        positions[i] = position_lim
-
-            i = 0
-            while i in range(len(positions) - 1):
-                j = i + 1
-                if positions[i] == positions[j]:
-                    if healths[i] > healths[j]:
-                        healths.remove(healths[j])
+        stack = []
+        for i in self.sort(positions):
+            print(i, directions[i])
+            if directions[i] == 'R':
+                stack.append(i)
+            else:
+                while len(stack) != 0:
+                    if healths[i] > healths[stack[-1]]:
                         healths[i] -= 1
-
-                        positions.remove(positions[j])
-                        directions.remove(directions[j])
-
-
-                    elif healths[i] == healths[j]:
-                        healths.remove(healths[j])
-                        healths.remove(healths[i])
-
-                        positions.remove(positions[j])
-                        positions.remove(positions[i])
-                        directions.remove(directions[j])
-                        directions.remove(directions[i])
-
-                    elif healths[i] < healths[j]:
-                        healths.remove(healths[i])
-                        healths[j] -= 1
-
-                        positions.remove(positions[i])
-                        directions.remove(directions[i])
-                i += 1
+                        healths[stack[-1]] = 0
+                        stack.pop()
+                    elif healths[i] < healths[stack[-1]]:
+                        healths[stack[-1]] -= 1
+                        healths[i] = 0
+                        stack.pop()
+                    elif healths[i] == healths[stack[-1]]:
+                        healths[i] = 0
+                        healths[stack[-1]] = 0
+                        stack.pop()
+            print('s', stack)
+            print('h', healths)
+        healths = [el for el in healths if el != 0]
         return healths
 
-
-positions = [3, 5, 2, 6]
-healths = [10, 10, 15, 12]
-directions = "RLRL"
-wynik = Solution()
-print(wynik.survivedRobotsHealths(positions, healths, directions))
+p = [3,5,2,6]
+h = [10,10,15,12]
+d = "RLRL"
+s = Solution()
+print('return:', s.survivedRobotsHealths(p,h,d))
